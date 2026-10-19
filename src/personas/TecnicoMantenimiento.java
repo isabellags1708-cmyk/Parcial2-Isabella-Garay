@@ -24,3 +24,4 @@ public class TecnicoMantenimiento {
     public String getNombre() { return nombre; }
     public ArrayList<NodoIoT> getNodosAsignados() { return nodosAsignados; }
 }
+

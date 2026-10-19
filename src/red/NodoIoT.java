@@ -25,7 +25,25 @@ public class NodoIoT {
      */
     public Sensor agregarSensor(String tipo, String idSensor, int capacidad) {
         // TODO: implementar (polimorfismo + composición)
-        return null;
+        Sensor sensor = null;
+        switch (tipo){
+            case "TEMPERATURA":
+                sensor = new SensorTemperatura(idSensor, capacidad);
+                break;
+            case "HUMEDAD":
+                sensor = new SensorHumedad(idSensor, capacidad);
+                break;
+            case "LUMINOSIDAD":
+                sensor = new SensorLuminosidad(idSensor, capacidad);
+                break;
+            default:
+                return null;
+
+        }
+        if (sensor != null) {
+            this.sensores.add(sensor);
+        }
+        return sensor;
     }
 
     /**
@@ -34,7 +52,23 @@ public class NodoIoT {
      */
     public double promedioTemperatura() {
         // TODO: implementar
-        return 0;
+        double suma = 0;
+        int contador = 0;
+
+        for (Sensor s : this.sensores) {
+            if (s instanceof SensorTemperatura) {
+                SensorTemperatura temp = (SensorTemperatura) s;
+
+                suma += temp.promedioUltimasLecturas();
+                contador++;
+            }
+        }
+
+        if (contador == 0) {
+            return 0;
+        }
+
+        return suma / contador;
     }
 
     /**
@@ -42,9 +76,26 @@ public class NodoIoT {
      */
     public List<Sensor> sensoresFueraDeRango() {
         // TODO: implementar
-        return new ArrayList<>();
-    }
+        List<Sensor> sensoresFueraDeRango = new ArrayList<>();
 
-    public String getId() { return id; }
-    public ArrayList<Sensor> getSensores() { return sensores; }
-}
+        for (Sensor s : this.sensores) {
+            int cantidad = s.getCantidadLecturas();
+
+            if (cantidad > 0) {
+                int indiceUltimaLectura =
+                        (s.getIndiceActual() - 1 + s.getUltimasLecturas().length)
+                                % s.getUltimasLecturas().length;
+
+                int ultimaLectura = s.getUltimasLecturas()[indiceUltimaLectura];
+
+                if (s.fueraDeRango(ultimaLectura)) {
+                    sensoresFueraDeRango.add(s);
+                }
+            }
+        }
+
+        return sensoresFueraDeRango;
+    }
+        public String getId() { return id; }
+        public ArrayList<Sensor> getSensores() { return sensores; }
+    }

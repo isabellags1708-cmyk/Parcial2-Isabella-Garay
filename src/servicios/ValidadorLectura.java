@@ -8,6 +8,21 @@ public class ValidadorLectura {
 
     public boolean esValida(String tipo, int valor) {
         // TODO: implementar switch por tipo
+        switch (tipo){
+            case "TEMPERATURA":
+                if(valor >= -10){
+                    return valor <= 50;
+                }
+            case "HUMEDAD":
+                if(valor >= 0){
+                    return valor <= 100;
+                }
+            case "LUMINOSIDAD":
+                if(valor >= 0){
+                    return valor <= 2000;
+                }
+
+        }
         return false;
     }
 }
